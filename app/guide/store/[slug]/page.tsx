@@ -31,81 +31,38 @@ interface StoreDefinition {
   highlightBrands: string[];
 }
 
-const STORE_DEFINITIONS: StoreDefinition[] = [
-  {
-    slug: "store-a",
-    nameKo: "스토어 A",
-    nameShort: "스토어 A",
-    category: "백화점",
-    region: "서울",
-    publicTransport: "지하철 2호선",
-    positioning: "프리미엄 백화점",
-    description: "스토어 A 입점 럭셔리 브랜드 BA·SA 채용 가이드.",
-    longtailKeywords: ["스토어 A 채용", "스토어 A BA", "스토어 A SA"],
-    matchPatterns: ["스토어 A"],
-    highlightBrands: ["brand-1", "brand-2", "brand-3"],
-  },
-  {
-    slug: "store-b",
-    nameKo: "스토어 B",
-    nameShort: "스토어 B",
-    category: "백화점",
-    region: "부산",
-    publicTransport: "지하철 1호선",
-    positioning: "지역 1번 백화점",
-    description: "스토어 B 입점 럭셔리 브랜드 채용 가이드.",
-    longtailKeywords: ["스토어 B 채용", "스토어 B BA"],
-    matchPatterns: ["스토어 B"],
-    highlightBrands: ["brand-1", "brand-4"],
-  },
-  {
-    slug: "store-c",
-    nameKo: "스토어 C",
-    nameShort: "스토어 C",
-    category: "면세점",
-    region: "인천",
-    publicTransport: "공항철도",
-    positioning: "공항 면세점",
-    description: "스토어 C 면세점 채용 가이드.",
-    longtailKeywords: ["스토어 C 채용", "면세점 채용"],
-    matchPatterns: ["스토어 C"],
-    highlightBrands: ["brand-2", "brand-3", "brand-5"],
-  },
-  {
-    slug: "store-d",
-    nameKo: "스토어 D",
-    nameShort: "스토어 D",
-    category: "복합쇼핑몰",
-    region: "서울",
-    publicTransport: "지하철 9호선",
-    positioning: "복합 쇼핑몰",
-    description: "스토어 D 복합 쇼핑몰 채용 가이드.",
-    longtailKeywords: ["스토어 D 채용"],
-    matchPatterns: ["스토어 D"],
-    highlightBrands: ["brand-1", "brand-5"],
-  },
-  {
-    slug: "store-e",
-    nameKo: "스토어 E",
-    nameShort: "스토어 E",
-    category: "백화점",
-    region: "대구",
-    publicTransport: "지하철 2호선",
-    positioning: "지역 럭셔리 거점",
-    description: "스토어 E 채용 가이드.",
-    longtailKeywords: ["스토어 E 채용"],
-    matchPatterns: ["스토어 E"],
-    highlightBrands: ["brand-3", "brand-4"],
-  },
-];
+const CATEGORIES = ["백화점", "백화점", "면세점", "복합쇼핑몰", "백화점", "백화점", "백화점", "면세점", "복합쇼핑몰", "백화점"];
+const REGIONS = ["서울", "부산", "인천", "서울", "대구", "광주", "대전", "제주", "서울", "수원"];
+const LINES = ["지하철 2호선", "지하철 1호선", "공항철도", "지하철 9호선", "지하철 2호선", "지하철 1호선", "지하철 1호선", "공항버스", "신분당선", "수인분당선"];
 
-const BRAND_DEFINITIONS = [
-  { slug: "brand-1", nameKo: "브랜드 1" },
-  { slug: "brand-2", nameKo: "브랜드 2" },
-  { slug: "brand-3", nameKo: "브랜드 3" },
-  { slug: "brand-4", nameKo: "브랜드 4" },
-  { slug: "brand-5", nameKo: "브랜드 5" },
-];
+const STORE_DEFINITIONS: StoreDefinition[] = Array.from({ length: 14 }, (_, i) => {
+  const idx = i + 1;
+  const letter = String.fromCharCode(64 + idx);
+  return {
+    slug: `store-${letter.toLowerCase()}-${idx}`,
+    nameKo: `스토어 ${letter}-${idx}`,
+    nameShort: `스토어 ${letter}-${idx}`,
+    category: CATEGORIES[i % CATEGORIES.length],
+    region: REGIONS[i % REGIONS.length],
+    publicTransport: LINES[i % LINES.length],
+    positioning: `${REGIONS[i % REGIONS.length]} ${CATEGORIES[i % CATEGORIES.length]} 핵심 럭셔리 매장`,
+    description: `스토어 ${letter}-${idx} 입점 럭셔리 브랜드 BA·SA·매니저 채용과 면접 가이드. ${REGIONS[i % REGIONS.length]} 지역 ${CATEGORIES[i % CATEGORIES.length]} 거점으로 다수 글로벌 브랜드가 입점한 매장입니다.`,
+    longtailKeywords: [
+      `스토어 ${letter}-${idx} 채용`,
+      `스토어 ${letter}-${idx} BA`,
+      `스토어 ${letter}-${idx} SA`,
+      `${REGIONS[i % REGIONS.length]} 럭셔리 매장 채용`,
+      `${CATEGORIES[i % CATEGORIES.length]} ${REGIONS[i % REGIONS.length]} 채용`,
+    ],
+    matchPatterns: [`스토어 ${letter}-${idx}`, REGIONS[i % REGIONS.length]],
+    highlightBrands: Array.from({ length: 8 }, (_, j) => `brand-${((i + j) % 23) + 1}`),
+  };
+});
+
+const BRAND_DEFINITIONS = Array.from({ length: 23 }, (_, i) => ({
+  slug: `brand-${i + 1}`,
+  nameKo: `브랜드 ${i + 1}`,
+}));
 
 interface MockJob {
   id: string;
@@ -119,29 +76,20 @@ interface MockJob {
 }
 
 // Static mock — Supabase fetch was ruled out in experiment 2A.
+const JOB_CATEGORIES = ["BA", "SA", "매니저", "트레이너", "VMD", "주얼리 SA", "워치 SA", "코스메틱 BA", "PB", "교환원", "캐셔", "수선사"];
+const EMPLOYMENT_TYPES = ["정규직", "계약직", "인턴", "파트타임"];
+
 async function fetchStoreJobs(store: StoreDefinition): Promise<MockJob[]> {
-  return [
-    {
-      id: `${store.slug}-1`,
-      title: `${store.nameShort} BA 채용`,
-      category: "BA",
-      employment_type: "정규직",
-      salary_min: 30000000,
-      salary_max: 40000000,
-      location: store.region,
-      created_at: "2026-05-01",
-    },
-    {
-      id: `${store.slug}-2`,
-      title: `${store.nameShort} SA 채용`,
-      category: "SA",
-      employment_type: "계약직",
-      salary_min: 28000000,
-      salary_max: 35000000,
-      location: store.region,
-      created_at: "2026-05-03",
-    },
-  ];
+  return Array.from({ length: 12 }, (_, i) => ({
+    id: `${store.slug}-${i + 1}`,
+    title: `${store.nameShort} ${JOB_CATEGORIES[i % JOB_CATEGORIES.length]} 채용`,
+    category: JOB_CATEGORIES[i % JOB_CATEGORIES.length],
+    employment_type: EMPLOYMENT_TYPES[i % EMPLOYMENT_TYPES.length],
+    salary_min: 25000000 + i * 1000000,
+    salary_max: 35000000 + i * 1500000,
+    location: store.region,
+    created_at: `2026-05-${String((i % 15) + 1).padStart(2, "0")}`,
+  }));
 }
 
 type PageParams = { params: Promise<{ slug: string }> };
