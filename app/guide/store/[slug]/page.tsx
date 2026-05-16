@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ClientBadge from "../../../components/ClientBadge";
 
 // =====================================================================
 // REPRO: Next.js 16 + turbopack + ISR + generateStaticParams produces
@@ -275,6 +276,9 @@ export default async function StoreDetailPage({ params }: PageParams) {
         <div style={{ fontSize: 12, color: "#888" }}>{store.category}</div>
         <h1 style={{ fontSize: 32, fontWeight: 700 }}>{store.nameKo}</h1>
         <p style={{ color: "#555" }}>{store.positioning}</p>
+        <div style={{ marginTop: 12 }}>
+          <ClientBadge storeSlug={store.slug} storeName={store.nameShort} />
+        </div>
       </section>
 
       <nav style={{ padding: "0 24px" }} aria-label="페이지 경로">
